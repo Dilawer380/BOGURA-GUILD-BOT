@@ -1,86 +1,35 @@
 module.exports.config = {
-	name: "rule",
-	version: "1.0.1",
-	hasPermssion: 0,
-	credits: "𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭",
-	description: "Customize the law for each group",
-	commandCategory: "Box Chat",
-	usages: "[add/remove/all] [content/ID]",
-	cooldowns: 5,
-	dependencies: {
+    name: "rules",
+    version: "1.0.1",
+    hasPermssion: 0,
+    credits: "RIYAJ",
+    description: "group rules",
+    commandCategory: "random-img",
+    usages: "send rules",
+    cooldowns: 5,
+    dependencies: {
+        "request": "",
         "fs-extra": "",
-        "path": ""
+        "axios": ""
     }
-}
+};
 
-module.exports.onLoad = () => {
-    const { existsSync, writeFileSync } = global.nodemodule["fs-extra"];
-    const { join } = global.nodemodule["path"];
-    const pathData = join(__dirname, "cache", "rules.json");
-    if (!existsSync(pathData)) return writeFileSync(pathData, "[]", "utf-8"); 
-}
-
-module.exports.run = ({ event, api, args, permssion }) => {
-    const { threadID, messageID } = event;
-    const { readFileSync, writeFileSync } = global.nodemodule["fs-extra"];
-    const { join } = global.nodemodule["path"];
-
-    const pathData = join(__dirname, "cache", "rules.json");
-    const content = (args.slice(1, args.length)).join(" ");
-    var dataJson = JSON.parse(readFileSync(pathData, "utf-8"));
-    var thisThread = dataJson.find(item => item.threadID == threadID) || { threadID, listRule: [] };
-
-    switch (args[0]) {
-        case "add": {
-            if (permssion == 0) return api.sendMessage("[Rule] You don't have enough powers to use more rules!", threadID, messageID);
-            if (content.length == 0) return api.sendMessage("[Rule] Entering information is not left blank", threadID, messageID);
-            if (content.indexOf("\n") != -1) {
-                const contentSplit = content.split("\n");
-                for (const item of contentSplit) thisThread.listRule.push(item);
-            }
-            else {
-                thisThread.listRule.push(content);
-            }
-            writeFileSync(pathData, JSON.stringify(dataJson, null, 4), "utf-8");
-            api.sendMessage('[Rule] added a new law to the team successfully!', threadID, messageID);
-            break;
-        }
-        case "list":
-        case"all": {
-            var msg = "", index = 0;
-            for (const item of thisThread.listRule) msg += `${index+=1}/ ${item}\n`;
-            if (msg.length == 0) return api.sendMessage("[Rule] Your team does not have a law list to show!", threadID, messageID);
-            api.sendMessage(`=== Group law ===\n\n${msg}`, threadID, messageID);
-            break;
-        }
-        case "rm":
-        case "remove":
-        case "delete": {
-            if (!isNaN(content) && content > 0) {
-                if (permssion == 0) return api.sendMessage("[Rule] You don't have enough powers to be able to use the Law!", threadID, messageID);
-                if (thisThread.listRule.length == 0) return api.sendMessage("[Rule] Your team does not have a law list to be able to delete!", threadID, messageID);
-                thisThread.listRule.splice(content - 1, 1);
-                api.sendMessage(`[Rule] has successfully deleted the law with something ${content}`, threadID, messageID);
-                break;
-            }
-            else if (content == "all") {
-                if (permssion == 0) return api.sendMessage("[Rule] You don't have enough powers to be able to use the Law!", threadID, messageID);
-                if (thisThread.listRule.length == 0) return api.sendMessage("[Rule] Your team does not have a law list to be able to delete!", threadID, messageID);
-                thisThread.listRule = [];
-                api.sendMessage(`[Rule] Your team does not have a law list to be able to delete!`, threadID, messageID);
-                break;
-            }
-        }
-        default: {
-            if (thisThread.listRule.length != 0) {
-                var msg = "", index = 0;
-                for (const item of thisThread.listRule) msg += `${index+=1}/ ${item}\n`;
-                return api.sendMessage(`=== Group law ===\n\n${msg} \n[Compliance with the group's law will contribute positively to your community!]`, threadID, messageID);
-            }
-            else return global.utils.throwError(this.config.name, threadID, messageID);
-        }
-    }
-
-    if (!dataJson.some(item => item.threadID == threadID)) dataJson.push(thisThread);
-    return writeFileSync(pathData, JSON.stringify(dataJson, null, 4), "utf-8");
-}
+module.exports.run = async({ api, event, args, client, Users, Threads, __GLOBAL, Currencies }) => {
+    const axios = global.nodemodule["axios"];
+    const request = global.nodemodule["request"];
+    const fs = global.nodemodule["fs-extra"];
+  const time = process.uptime(),
+    hours = Math.floor(time / (60 * 60)),
+    minutes = Math.floor((time % (60 * 60)) / 60),
+    seconds = Math.floor(time % 60);
+const moment = require("moment-timezone");
+var juswa = moment.tz("Asia/Dhaka").format("『D/MM/YYYY』 【HH:mm:ss】");
+    var ZiaRein3 = (`🇧🇩✦𝗕𝗗𝗕𝗟𝗗✦🇧🇩\nম্যাসেঞ্জার গ্রুপে মাল্টিপ্লেয়ার খেলার নিয়ম:\n\n👉যারা 𝐀𝐃𝐌𝐈𝐍 𝐏𝐀𝐍𝐄𝐋 তারা 𝐌𝐀𝐒𝐒𝐀𝐍𝐆𝐄𝐑 𝐆𝐑𝐎𝐔𝐏 𝐂𝐀𝐋𝐋 এ থাকবেন\n\n১. গেমে কেউ চাপাচাপি করবেন না।\n২. পেছনে কোনো গাড়ি দেখতে পেলেই তাকে সাইড দেবেন ।\n৩. ডিজে লাগানো সম্পূর্ণ নিষিদ্ধ।\n৪. এডমিন/ট্রিপ মাস্টার/মডারেটর ছাড়া কেউ অযথা গেমে রেডি, এনটি, লিড প্লিজ ইত্যাদি বলবেন না।\n৫. এডমিন/ট্রিপ মাস্টার/মডারেটর গেমে যেসব ম্যাসেজ দেবেন তা সবসময় মেনে চলার চেষ্টা করবেন।\n৬. অযথা হর্ন বাজাবেন না।\n৭. সবাই সবার আসল নাম দিয়ে গেমে ঢুকবেন, ফেইক নাম গ্রহণযোগ্য নয়।\n৮. সবাই যে রোড দিয়ে যাবে সে রোড দিয়ে যেতে হবে, অর্থাৎ সবাই সোজা গেলে আপনাকেও সোজা যেতে হবে, আপনি অন্য রোড (ডানে/বামে) দিয়ে ঢুকতে পারবেন না।\n৯. লোডিং ম্যাপে ঢোকার পর যদি নেক্সট ওয়েট বলা হয়ে থাকে তাহলে ম্যাপ লোড নিলেই ব্রেক করে আগাবেন। তা না হলে ধাক্কাধাক্কি হয়ে লাইন বাঁকা হয়ে যায়।\n১০. যারা নতুন গ্রুপে আসবেন তারা গ্রুপ ক্রিয়েটর এর কাছ থেকে apk এবং স্পিড ফাইল সেট করে নিবেন।\n১১. যে যখন ট্রিপ দেবেন সে ট্রিপের ছবি/ভিডিয়ো করে গ্রুপে পোস্ট করবেন।\n১২. গ্রুপ থেকে করা রুম ও পাসওয়ার্ড বাইরে শেয়ার করা যাবে না। কেউ শেয়ার করেছেন এমন প্রমাণ পেলে তাকে গ্রুপ থেকে রিমুভ করা হবে।\n১৩. ট্রিপ দিতে না পারলে সমস্যার কথা ট্রিপ মাস্টার/এডমিন/মডারেটরদের জানাবেন। কেউ ৩ দিনের বেশি অ্যাক্টিভ না থাকলে তাঁকে গ্রুপ থেকে রিমুভ করা হবে।\n\n@everyone\nনতুন যারা এ্যাড হয়েছেন কস্ট করে পড়ে নিবেন তাহলে আপনাদের গেম খেলতে সুবিধা হবে।\n\n♻️𝐆𝐑𝐎𝐔𝐏 𝐈𝐃 : ${event.threadID}\n𝐓𝐈𝐌𝐄: ${juswa}\n\n🇧🇩𝐀𝐃𝐌𝐈𝐍 𝐏𝐀𝐍𝐄𝐋🇧🇩`);
+    var ZiaRein = [
+"https://i.imgur.com/37G0OI8.gif",
+"https://i.imgur.com/cp3POj7.gif",
+"https://i.imgur.com/0tSYo1f.gif",
+    ];
+    var ZiaRein2 = () => api.sendMessage({ body: ZiaRein3, attachment: fs.createReadStream(__dirname + "/cache/ZiaRein1.jpg")}, event.threadID, () => fs.unlinkSync(__dirname + "/cache/ZiaRein1.jpg"), event.messageID);
+    return request(encodeURI(ZiaRein[Math.floor(Math.random() * ZiaRein.length)])).pipe(fs.createWriteStream(__dirname + "/cache/ZiaRein1.jpg")).on("close", () => ZiaRein2());
+};

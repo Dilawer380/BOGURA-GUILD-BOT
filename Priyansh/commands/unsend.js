@@ -5,7 +5,7 @@ module.exports.config = {
 	credits: "𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭",
 	description: "Gỡ tin nhắn của bot",
 	commandCategory: "system",
-	usages: "unsend",
+	usages: "uns",
 	cooldowns: 0
 };
 

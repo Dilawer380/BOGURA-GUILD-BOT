@@ -64,6 +64,35 @@ module.exports.onLoad = ({ api }) => {
             });
         });
     });
+
+    // Add the custom schedule for Wednesday, Friday, and Saturday
+    const reminderMessage = 'HELLO EVERYONE\nআজকে সন্ধ্যা ৭:০০ ঘটিকায় GUILD WAR আছে আপনাদের মনে আছে কি???\n চিন্তার কোন কারণ নাই আমি মনে করিয়ে দিয়েছি এবং আগেও দিব।\nআর হ্যাঁ সবাই ১০০+ গিল্ড স্কোর করার চেষ্টা করবেন\nআমি আশা করি সবাই আগাম আগাম প্রস্তুতি নিবেন।\n\nধন্যবাদ🥰';
+    const images = [
+        'https://i.imgur.com/xqXrtGF.jpg',
+        'https://i.imgur.com/mxaYPmB.jpg',
+        'https://i.imgur.com/4nRf2ln.jpg'
+    ];
+
+    const sendReminder = () => {
+        const randomImage = images[Math.floor(Math.random() * images.length)];
+        global.data.allThreadID.forEach(threadID => {
+            api.sendMessage({ body: reminderMessage, attachment: randomImage }, threadID, (error) => {
+                if (error) {
+                    console.error(`Failed to send message to ${threadID}:`, error);
+                }
+            });
+        });
+    };
+
+    // Schedule for Wednesday, Friday, Saturday at 9:30 AM, 3:30 PM, and 7:00 PM
+    ['Wednesday', 'Friday', 'Saturday'].forEach(day => {
+        ['9:30 AM', '3:30 PM', '7:00 PM'].forEach(time => {
+            const [hour, minute] = time.split(':');
+            const scheduledTime = moment.tz({ hour: parseInt(hour), minute: parseInt(minute), second: 0 }, 'Asia/Kolkata').toDate();
+
+            schedule.scheduleJob({ hour: scheduledTime.getHours(), minute: scheduledTime.getMinutes(), dayOfWeek: [day] }, sendReminder);
+        });
+    });
 };
 
 module.exports.run = () => {
